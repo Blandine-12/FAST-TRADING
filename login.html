@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fast Trading Auth</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+body {
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-box {
+    width: 100%;
+    max-width: 500px;
+}
+
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+.form-control {
+    border-radius: 10px;
+}
+
+.btn {
+    border-radius: 10px;
+}
+
+.nav-tabs .nav-link {
+    width: 33.3%;
+    text-align: center;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="auth-box">
+
+<div class="card">
+
+    <div class="card-header text-center bg-white">
+        <h4>🔐 Fast Trading System</h4>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs">
+        <li class="nav-item w-50">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#login">Login</button>
+        </li>
+        <li class="nav-item w-50">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#register">Create Account</button>
+        </li>
+    </ul>
+
+    <div class="card-body tab-content p-4">
+
+        <!-- LOGIN -->
+        <div class="tab-pane fade show active" id="login">
+
+            <h5>Login</h5>
+
+            <div class="mb-3">
+                <label class="form-label">Phone / Username</label>
+                <input type="text" id="loginUser" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" id="loginPass" class="form-control">
+            </div>
+
+            <button class="btn btn-primary w-100 mb-2" onclick="userLogin()">
+                Login as User
+            </button>
+
+            <button class="btn btn-dark w-100" onclick="adminLogin()">
+                Login as Admin
+            </button>
+
+        </div>
+
+        <!-- REGISTER -->
+        <div class="tab-pane fade" id="register">
+
+            <h5>Create Account</h5>
+
+            <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <input type="text" id="regName" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Phone Number</label>
+                <input type="text" id="regPhone" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" id="regPass" class="form-control">
+            </div>
+
+            <button class="btn btn-success w-100" onclick="registerUser()">
+                Create Account
+            </button>
+
+        </div>
+
+    </div>
+</div>
+
+</div>
+
+<script>
+
+// ---------------- REGISTER ----------------
+function registerUser() {
+    let name = document.getElementById("regName").value;
+    let phone = document.getElementById("regPhone").value;
+    let pass = document.getElementById("regPass").value;
+
+    if (!name || !phone || !pass) {
+        alert("Fill all fields");
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // check if exists
+    let exists = users.find(u => u.phone === phone);
+    if (exists) {
+        alert("User already exists");
+        return;
+    }
+
+    users.push({
+        name,
+        phone,
+        password: pass,
+        role: "USER"
+    });
+
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Account created successfully!");
+}
+
+// ---------------- USER LOGIN ----------------
+function userLogin() {
+    let user = document.getElementById("loginUser").value;
+    let pass = document.getElementById("loginPass").value;
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    let found = users.find(u => (u.phone === user || u.name === user) && u.password === pass);
+
+    if (found) {
+        localStorage.setItem("currentUser", JSON.stringify(found));
+        alert("Login successful!");
+        window.location.href = "index.html"; // 👈 MAIN PAGE
+    } else {
+        alert("Invalid user credentials");
+    }
+}
+
+// ---------------- ADMIN LOGIN ----------------
+function adminLogin() {
+    let user = document.getElementById("loginUser").value;
+    let pass = document.getElementById("loginPass").value;
+
+    if (user === "admin" && pass === "admin123") {
+
+        localStorage.setItem("currentUser", JSON.stringify({
+            name: "Admin",
+            role: "ADMIN"
+        }));
+
+        alert("Admin login successful");
+        window.location.href = "admin.html"; // 👈 MAIN PAGE
+    } else {
+        alert("Invalid admin credentials");
+    }
+}
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
