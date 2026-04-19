@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buying Form - Rwanda Locations</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body {
+    background: #f4f6f9;
+}
+
+.form-card {
+    max-width: 900px;
+    margin: 40px auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    background: white;
+    overflow: hidden;
+}
+
+.header {
+    background: linear-gradient(135deg, #198754, #20c997);
+    color: white;
+    padding: 25px;
+    text-align: center;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card form-card">
+
+    <div class="header">
+        <h2>🛒 Buying Request Form</h2>
+        <p>Rwanda Full Location System</p>
+    </div>
+
+    <div class="card-body p-4">
+
+        <form id="buyForm">
+
+            <div class="row g-3">
+
+                <!-- Product -->
+                <div class="col-md-6">
+                    <label class="form-label">Product Name</label>
+                    <input type="text" class="form-control" id="product_name" required>
+                </div>
+
+                <!-- Budget -->
+                <div class="col-md-6">
+                    <label class="form-label">Budget (RWF)</label>
+                    <input type="number" class="form-control" id="budget" required>
+                </div>
+
+                <!-- Name -->
+                <div class="col-md-6">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="name" required>
+                </div>
+
+                <!-- Phone -->
+                <div class="col-md-6">
+                    <label class="form-label">Phone Number</label>
+                    <input type="text" class="form-control" id="phone" required>
+                </div>
+
+                <!-- District -->
+                <div class="col-md-6">
+                    <label class="form-label">District</label>
+                    <select class="form-select" id="district" onchange="updateSectors()" required>
+                        <option value="">Select District</option>
+
+                        <!-- Kigali -->
+                        <option>Gasabo</option>
+                        <option>Kicukiro</option>
+                        <option>Nyarugenge</option>
+
+                        <!-- Northern -->
+                        <option>Musanze</option>
+                        <option>Burera</option>
+                        <option>Gicumbi</option>
+                        <option>Rulindo</option>
+
+                        <!-- Eastern -->
+                        <option>Rwamagana</option>
+                        <option>Kayonza</option>
+                        <option>Ngoma</option>
+                        <option>Bugesera</option>
+
+                        <!-- Western -->
+                        <option>Rubavu</option>
+                        <option>Rusizi</option>
+                        <option>Nyamasheke</option>
+                        <option>Karongi</option>
+
+                        <!-- Southern -->
+                        <option>Huye</option>
+                        <option>Nyanza</option>
+                        <option>Gisagara</option>
+                        <option>Nyamagabe</option>
+                    </select>
+                </div>
+
+                <!-- Sector -->
+                <div class="col-md-6">
+                    <label class="form-label">Sector</label>
+                    <select class="form-select" id="sector" required>
+                        <option value="">Select Sector</option>
+                    </select>
+                </div>
+
+                <!-- Urgency -->
+                <div class="col-12">
+                    <label class="form-label">Urgency</label>
+                    <select class="form-select" id="urgency" required>
+                        <option value="">Select urgency</option>
+                        <option>Very Fast (Today)</option>
+                        <option>Normal</option>
+                        <option>Flexible</option>
+                    </select>
+                </div>
+
+                <!-- Description -->
+                <div class="col-12">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" id="description" rows="4" required></textarea>
+                </div>
+
+                <!-- Submit -->
+                <div class="col-12">
+                    <button type="submit" class="btn btn-success btn-submit">
+                        Submit Buying Request
+                    </button>
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+</div>
+
+<script>
+// FULL RWANDA SECTORS DATA
+const locations = {
+    Gasabo: ["Kimironko","Remera","Kacyiru","Ndera","Rusororo","Bumbogo","Kinyinya"],
+    Kicukiro: ["Kagarama","Kanombe","Nyarugunga","Gatenga","Gahanga","Masaka","Niboye"],
+    Nyarugenge: ["Nyamirambo","Gitega","Kimisagara","Muhima","Rwezamenyo","Nyakabanda"],
+
+    Musanze: ["Muhoza","Cyuve","Busogo","Kinigi","Gataraga","Nkotsi"],
+    Burera: ["Butaro","Cyanika","Kinoni","Rwerere","Ruhunde","Nemba"],
+    Gicumbi: ["Byumba","Nyamiyaga","Manyagiro","Kaniga","Rushaki"],
+    Rulindo: ["Shyorongi","Masoro","Tumba","Base","Bushoki"],
+
+    Rwamagana: ["Fumbwe","Kigabiro","Karenge","Rubona","Muyumbu"],
+    Kayonza: ["Mukarange","Rukara","Kabare","Murama","Ndego"],
+    Ngoma: ["Kazo","Mutenderi","Remera","Rukira","Zaza"],
+    Bugesera: ["Nyamata","Rilima","Juru","Ntarama","Mayange"],
+
+    Rubavu: ["Gisenyi","Nyamyumba","Rugerero","Rubavu","Bugeshi"],
+    Rusizi: ["Kamembe","Gihundwe","Nyakarenzo","Gitambi","Nkanka"],
+    Nyamasheke: ["Kagano","Kanjongo","Bushekeri","Shangi","Kirimbi"],
+    Karongi: ["Bwishyura","Gishyita","Gitesi","Rubengera","Ruganda"],
+
+    Huye: ["Ngoma","Tumba","Rusatira","Ruhashya","Simbi"],
+    Nyanza: ["Busasamana","Mukingo","Kigoma","Rwabicuma","Nyagisozi"],
+    Gisagara: ["Kibilizi","Mamba","Ndora","Save","Muganza"],
+    Nyamagabe: ["Gasaka","Kaduha","Kamegeri","Tare","Kitabi"]
+};
+
+// UPDATE SECTORS
+function updateSectors() {
+    let district = document.getElementById("district").value;
+    let sector = document.getElementById("sector");
+
+    sector.innerHTML = '<option value="">Select Sector</option>';
+
+    if (locations[district]) {
+        locations[district].forEach(s => {
+            let opt = document.createElement("option");
+            opt.value = s;
+            opt.text = s;
+            sector.appendChild(opt);
+        });
+    }
+}
+
+// SAVE REQUEST
+document.getElementById("buyForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let data = {
+        id: Date.now(),
+        product: product_name.value,
+        budget: budget.value,
+        name: name.value,
+        phone: phone.value,
+        district: district.value,
+        sector: sector.value,
+        urgency: urgency.value,
+        description: description.value,
+        status: "PENDING",
+        type: "BUY",
+        createdAt: new Date().toISOString()
+    };
+
+    let records = JSON.parse(localStorage.getItem("buys")) || [];
+    records.push(data);
+    localStorage.setItem("buys", JSON.stringify(records));
+
+    alert("Buy request submitted successfully!");
+    this.reset();
+});
+let request = {
+    id: Date.now(),
+    type: "BUY", // or "SELL"
+    product: product_name.value,
+    price: price.value,
+    name: name.value,
+    phone: phone.value,
+    district: district.value,
+    sector: sector.value,
+    description: description.value,
+    status: "PENDING",
+    createdAt: new Date().toISOString()
+};
+
+let data = JSON.parse(localStorage.getItem("requests")) || [];
+data.push(request);
+localStorage.setItem("requests", JSON.stringify(data));
+</script>
+
+</body>
+</html>

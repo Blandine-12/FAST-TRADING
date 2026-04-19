@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fast Trading - Selling Form</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body {
+    background: #f4f6f9;
+}
+
+.form-card {
+    max-width: 850px;
+    margin: auto;
+    margin-top: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    background: white;
+}
+
+.header {
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+    color: white;
+    padding: 25px;
+    text-align: center;
+    border-radius: 15px 15px 0 0;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    font-weight: bold;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="card form-card">
+
+    <div class="header">
+        <h2>🛒 Selling Form</h2>
+        <p>Fast Trading Commercial Marketplace</p>
+    </div>
+
+    <div class="card-body p-4">
+
+        <form id="sellForm">
+
+            <div class="row g-3">
+
+                <!-- Product Name -->
+                <div class="col-md-6">
+                    <label class="form-label">Product Name</label>
+                    <input type="text" class="form-control" id="product_name" placeholder="Enter product name">
+                </div>
+
+                <!-- Price -->
+                <div class="col-md-6">
+                    <label class="form-label">Price</label>
+                    <input type="number" class="form-control" id="price" placeholder="Enter price">
+                </div>
+
+                <!-- Full Name -->
+                <div class="col-md-6">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                </div>
+
+                <!-- Phone -->
+                <div class="col-md-6">
+                    <label class="form-label">Phone Number</label>
+                    <input type="number" class="form-control" id="number" placeholder="Enter phone number">
+                </div>
+
+                <!-- District -->
+                <div class="col-md-6">
+                    <label class="form-label">District</label>
+                    <select class="form-select" id="district" onchange="updateSectors()">
+                        <option value="">Select District</option>
+                        <option>Gasabo</option>
+                        <option>Kicukiro</option>
+                        <option>Nyarugenge</option>
+                        <option>Musanze</option>
+                        <option>Burera</option>
+                    </select>
+                </div>
+
+                <!-- Sector -->
+                <div class="col-md-6">
+                    <label class="form-label">Sector</label>
+                    <select class="form-select" id="sector">
+                        <option value="">Select Sector</option>
+                    </select>
+                </div>
+
+                <!-- Selling Speed -->
+                <div class="col-12">
+                    <label class="form-label">Selling Speed</label>
+                    <select class="form-select" id="issueType">
+                        <option value="">Select Option</option>
+                        <option>Fast (vuba vuba)</option>
+                        <option>Medium</option>
+                        <option>Slow</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <!-- Description -->
+                <div class="col-12">
+                    <label class="form-label">Product Description</label>
+                    <textarea class="form-control" id="description" rows="4" placeholder="Describe your product"></textarea>
+                </div>
+
+                <!-- Submit -->
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary btn-submit">
+                        Submit Selling Request
+                    </button>
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+</div>
+
+<!-- JavaScript -->
+<script>
+
+// District → Sector system
+function updateSectors() {
+    let district = document.getElementById("district").value;
+    let sector = document.getElementById("sector");
+
+    let data = {
+        Gasabo: ["Kimironko", "Remera", "Kacyiru"],
+        Kicukiro: ["Kagarama", "Kanombe", "Nyarugunga"],
+        Nyarugenge: ["Nyamirambo", "Gitega", "Kimisagara"],
+        Musanze: ["Muhoza", "Cyuve", "Busogo"],
+        Burera: ["Butaro", "Kinoni", "Cyanika"]
+    };
+
+    sector.innerHTML = '<option value="">Select Sector</option>';
+
+    if (data[district]) {
+        data[district].forEach(s => {
+            let opt = document.createElement("option");
+            opt.text = s;
+            sector.add(opt);
+        });
+    }
+}
+
+// Submit form + Save to system
+document.getElementById("sellForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let sale = {
+        product: document.getElementById("product_name").value,
+        price: document.getElementById("price").value,
+        name: document.getElementById("name").value,
+        phone: document.getElementById("number").value,
+        district: document.getElementById("district").value,
+        sector: document.getElementById("sector").value,
+        speed: document.getElementById("issueType").value,
+        description: document.getElementById("description").value,
+        status: "PENDING"   // 👈 IMPORTANT FOR ADMIN SYSTEM
+    };
+
+    let sales = JSON.parse(localStorage.getItem("sales")) || [];
+    sales.push(sale);
+
+    localStorage.setItem("sales", JSON.stringify(sales));
+
+    alert("Selling request submitted successfully!");
+    this.reset();
+});
+let request = {
+    id: Date.now(),
+    type: "BUY", // or "SELL"
+    product: product_name.value,
+    price: price.value,
+    name: name.value,
+    phone: phone.value,
+    district: district.value,
+    sector: sector.value,
+    description: description.value,
+    status: "PENDING",
+    createdAt: new Date().toISOString()
+};
+
+let data = JSON.parse(localStorage.getItem("requests")) || [];
+data.push(request);
+localStorage.setItem("requests", JSON.stringify(data));
+
+</script>
+
+</body>
+</html>
